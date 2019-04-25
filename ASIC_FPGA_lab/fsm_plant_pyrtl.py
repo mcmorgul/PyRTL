@@ -7,36 +7,39 @@
 # 
 # Sample coding for water and temperature sensors are:
 # 
-# **ConditionalUpdate Water (Humidity) Sensor Output Legend:**
-# 0%: 0(0000); 10%: 1(0001); 20%: 2(0010);30%: 3(0011); 40%: 4(0100); 50%: 5(0101); 
-# 60%: 6(0110); 70%: 7(0111); 80%: 13(1101); 90%: 14(1110); 100%: 15(1111)
+# **Water (Humidity) Sensor Output Legend:**
+# * 0%: 0(0000); 10%: 1(0001); 20%: 2(0010);30%: 3(0011); 40%: 4(0100); 50%: 5(0101); 
+# * 60%: 6(0110); 70%: 7(0111); 80%: 13(1101); 90%: 14(1110); 100%: 15(1111)
 # 
 # **Temperature Sensor Output Legend (in Celsius):**
-# <17.5: 0(000); 20: 1(001);22.5: 2(010); 25: 3(011); 27.5: 4(100); 30: 5(101); 32.5: 6(110); 35: 7(111); 
+# * <17.5: 0(000); 20: 1(001);22.5: 2(010); 25: 3(011); 27.5: 4(100); 30: 5(101); 32.5: 6(110); 35: 7(111); 
 # 
 # We have four inputs called **start**, **reset**, **water**, and **temperature**
 # 
-# input **start** controls the POWER, either POWER is ON or OFF
-# input **reset**  puts the system into default state.
-# input **water** is the output of the humidity sensor 
-# input **temperature** is the output of the the temperature sensor
+# * input **start** controls the POWER, either POWER is ON or OFF
+# * input **reset**  puts the system into default state.
+# * input **water** is the output of the humidity sensor 
+# * input **temperature** is the output of the the temperature sensor
 # 
-# We have two outputs called **pump**, **ac**,
+# We have two outputs called **pump** and **ac**,
 # 
-# output **pump** (water pump): ON (1) or OFF (0)
-# output **ac** (Air Conditioning): A/C: Heating (11), Cooling (01) or OFF (00)
+# * output **pump** (water pump): ON (1) or OFF (0)
+# 
+# * output **ac** (Air Conditioning): A/C: Heating (11), Cooling (01) or OFF (00)
 # 
 # We have seven states. For State machine diagram please visit: http://venividiwiki.ee.virginia.edu/mediawiki/index.php/Water_and_Temperature_Automation_of_a_Plant
 # 
-# **SO**: Power is OFF (both pump and ac are closed)
-# **S1**: Default state (**pump** is ON and **ac** is OFF)
-# **S2**: Default state (**ac** is OFF)
-# **S3**: Default state (**ac** is Heating)
-# **S4**: Default state (**ac** is Cooling)
-# **S5**: Default state (**pump** is ON)
-# **S6**: Default state (**pump** is OFF)
+# * **SO**: Power is OFF (both pump and ac are closed)
+# * **S1**: Default state (**pump** is ON and **ac** is OFF)
+# * **S2**: Default state (**ac** is OFF)
+# * **S3**: Default state (**ac** is Heating)
+# * **S4**: Default state (**ac** is Cooling)
+# * **S5**: Default state (**pump** is ON)
+# * **S6**: Default state (**pump** is OFF)
 # 
 # Since **S2-S4** and **S5-S6** states are independent. We register two state variable **state_water** and **state_temperature**
+
+# # Inport the pyrtl library
 
 # In[ ]:
 
@@ -70,7 +73,7 @@ S0, S1, S2, S3, S4, S5, S6 = [pyrtl.Const(x, bitwidth=3) for x in range(7)]
 
 
 # ## Create state transition and logic 
-# **PyRTL provides a class "ConditionalUpdate"** to provide a predicated update to a registers, wires, and memories.
+# **PyRTL has a class "ConditionalUpdate"** to provide a predicated update to a registers, wires, and memories.
 # It is same as "if-else if-else" conditional states.
 
 # In[ ]:
@@ -208,8 +211,8 @@ sim = pyrtl.Simulation(tracer=sim_trace)
 sim_inputs = {
     'start':   '11111111111111111111100',
     'reset':   '01000000000000000000000',
-	'water':   ['0', '1', '2','3', '4', '5','6','7','7', '13','14','14','15','15','14','13','7','6','5','4','3','3','3'],
-	'temperature':   ['0', '1', '2','1', '2', '3','4','5','6', '6','6','5','4','4','3','3','4','5','6','1','1','1','1']
+    'water':   ['0', '1', '2','3', '4', '5','6','7','7', '13','14','14','15','15','14','13','7','6','5','4','3','3','3'],
+    'temperature':   ['0', '1', '2','1', '2', '3','4','5','6', '6','6','5','4','4','3','3','4','5','6','1','1','1','1']
     }
 
 
@@ -218,6 +221,10 @@ sim_inputs = {
 
 for cycle in range(len(sim_inputs['start'])):
     sim.step({w: int(v[cycle]) for w, v in sim_inputs.items()})
+
+
+# In[ ]:
+
 
 print("--- Simulation Results ---")
 sim_trace.render_trace(trace_list=['start', 'reset', 'water', 'pump', 'temperature','ac','state_water', 'state_temperature'])
@@ -236,8 +243,7 @@ with open('fsm_plant.v', 'w') as v_file:
 
 # Output of TestBench to a Verilog file named 'fsm_plant_tb.v'
 with open('fsm_plant_tb.v', 'w') as tbfile:
-    pyrtl.output_verilog_testbench(dest_file=tbfile, simulation_trace=sim_trace)
-    #print(tbfile.getvalue())   
+    pyrtl.output_verilog_testbench(dest_file=tbfile, simulation_trace=sim_trace)  
 
 # Optimized Verilog
 pyrtl.synthesize()
@@ -246,5 +252,4 @@ pyrtl.optimize()
 # Optimized output to a Verilog file named 'fsm_plant_opt.v'
 with open('fsm_plant_opt.v', 'w') as vfile:
     pyrtl.OutputToVerilog(vfile)
-    #print(vfile.getvalue())
 
