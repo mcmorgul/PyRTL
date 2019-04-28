@@ -28,6 +28,7 @@
 # * output **ac** (Air Conditioning): A/C: Heating (11), Cooling (01) or OFF (00)
 # 
 # We have seven states. For State machine diagram please visit: http://venividiwiki.ee.virginia.edu/mediawiki/index.php/Water_and_Temperature_Automation_of_a_Plant
+# or http://venividiwiki.ee.virginia.edu/mediawiki/index.php/Water_and_Temperature_Automation_of_a_Plant_using_FPGA
 # 
 # * **SO**: Power is OFF (both pump and ac are closed)
 # * **S1**: Default state (**pump** is ON and **ac** is OFF)
@@ -104,12 +105,12 @@ with pyrtl.conditional_assignment:
                         with pyrtl.otherwise: # between 22,5 and 30
                             state_temperature.next |= S2
                     with state_temperature == S3: # heat
-                        with temperature <= 5: # less than 30
+                        with temperature <= 5: # less than or equal to 30
                             state_temperature.next |= S3
                         with temperature > 5: # higher than 30
                             state_temperature.next |= S2
                     with state_temperature == S4: #cool
-                        with temperature <= 2: # less than 22.5
+                        with temperature <= 2: # less than or equal to 22.5
                             state_temperature.next |= S2
                         with temperature > 2: # higher than 22.5
                             state_temperature.next |= S4
@@ -123,12 +124,12 @@ with pyrtl.conditional_assignment:
                         with pyrtl.otherwise: # between 22,5 and 30
                             state_temperature.next |= S2
                     with state_temperature == S3: # heat
-                        with temperature <= 5: # less than 30
+                        with temperature <= 5: # less than or equal to 30
                             state_temperature.next |= S3
                         with temperature > 5: # higher than 30
                             state_temperature.next |= S2
                     with state_temperature == S4: #cool
-                        with temperature <= 2: # less than 22.5
+                        with temperature <= 2: # less than or equal to 22.5
                             state_temperature.next |= S2
                         with temperature > 2: # higher than 22.5
                             state_temperature.next |= S4
@@ -136,46 +137,46 @@ with pyrtl.conditional_assignment:
                 with water <= 5: # less than or equal to %50
                     state_water.next |= S5
                     with state_temperature == S2: #ac OFF
-                        with (temperature <= 5) | (temperature >= 2 ): # between 22,5 and 30
-                            state_temperature.next |= S2
                         with temperature < 2: # less than 22,5
                             state_temperature.next |= S3
                         with temperature > 5: # higher than 30
                             state_temperature.next |= S4
+                        with pyrtl.otherwise: # between 22,5 and 30
+                            state_temperature.next |= S2
                     with state_temperature == S3: # heat
-                        with temperature <= 5: # less than 30
+                        with temperature <= 5: # less than or equal to 30
                             state_temperature.next |= S3
                         with temperature > 5: # higher than 30
                             state_temperature.next |= S2
                     with state_temperature == S4: #cool
-                        with temperature <= 2: # less than 22.5
+                        with temperature <= 2: # less than or equal to 22.5
                             state_temperature.next |= S2
                         with temperature > 2: # higher than 22.5
                             state_temperature.next |= S4
                 with water > 5: # higher than %50
                     state_water.next |= S6
                     with state_temperature == S2: #ac OFF
-                        with (temperature <= 5) | (temperature >= 2 ): # between 22,5 and 30
-                            state_temperature.next |= S2
                         with temperature < 2: # less than 22,5
                             state_temperature.next |= S3
                         with temperature > 5: # higher than 30
                             state_temperature.next |= S4
+                        with pyrtl.otherwise: # between 22,5 and 30
+                            state_temperature.next |= S2
                     with state_temperature == S3: # heat
-                        with temperature <= 5: # less than 30
+                        with temperature <= 5: # less than or equal to 30
                             state_temperature.next |= S3
                         with temperature > 5: # higher than 30
                             state_temperature.next |= S2
                     with state_temperature == S4: #cool
-                        with temperature <= 2: # less than 22.5
+                        with temperature <= 2: # less than or equal to 22.5
                             state_temperature.next |= S2
                         with temperature > 2: # higher than 22.5
                             state_temperature.next |= S4
             with pyrtl.otherwise:  
                 state_water.next |= S1
                 state_temperature.next |= S1
-    with pyrtl.otherwise:
-        state_water.next |= S0 # power OFF
+    with pyrtl.otherwise: # power OFF
+        state_water.next |= S0 
         state_temperature.next |= S0
 
 
@@ -230,7 +231,7 @@ print("--- Simulation Results ---")
 sim_trace.render_trace(trace_list=['start', 'reset', 'water', 'pump', 'temperature','ac','state_water', 'state_temperature'])
 
 
-# Also, to make our input/output easy to reason about let's **specify an order to the traces**
+# Also, to make our input/output easy to reason about we **specified an order to the traces**
 
 # ## Create Verilog code
 
