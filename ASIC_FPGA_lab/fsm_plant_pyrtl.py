@@ -105,9 +105,9 @@ with pyrtl.conditional_assignment:
                         with pyrtl.otherwise: # between 20 and 27.5
                             state_temperature.next |= S2
                     with state_temperature == S3: # heat untill 25
-                        with temperature < 4: # less than or equal to 25
+                        with temperature < 4: # less than 25
                             state_temperature.next |= S3
-                        with temperature >= 4: # higher than 25
+                        with temperature >= 4: # higher than or equal to 25
                             state_temperature.next |= S2
                     with state_temperature == S4: #cool untill 22.5
                         with temperature > 3: # higher than 22.5
@@ -124,9 +124,9 @@ with pyrtl.conditional_assignment:
                         with pyrtl.otherwise: # between 20 and 27.5
                             state_temperature.next |= S2
                     with state_temperature == S3: # heat untill 25
-                        with temperature < 4: # less than or equal to 25
+                        with temperature < 4: # less than 25
                             state_temperature.next |= S3
-                        with temperature >= 4: # higher than 25
+                        with temperature >= 4: # higher than or equal to 25
                             state_temperature.next |= S2
                     with state_temperature == S4: #cool untill 22.5
                         with temperature > 3: # higher than 22.5
@@ -144,9 +144,9 @@ with pyrtl.conditional_assignment:
                         with pyrtl.otherwise: # between 20 and 27.5
                             state_temperature.next |= S2
                     with state_temperature == S3: # heat untill 25
-                        with temperature < 4: # less than or equal to 25
+                        with temperature < 4: # less than 25
                             state_temperature.next |= S3
-                        with temperature >= 4: # higher than 25
+                        with temperature >= 4: # higher than or equal to 25
                             state_temperature.next |= S2
                     with state_temperature == S4: #cool untill 22.5
                         with temperature > 3: # higher than 22.5
@@ -163,9 +163,9 @@ with pyrtl.conditional_assignment:
                         with pyrtl.otherwise: # between 20 and 27.5
                             state_temperature.next |= S2
                     with state_temperature == S3: # heat untill 25
-                        with temperature < 4: # less than or equal to 25
+                        with temperature < 4: # less than 25
                             state_temperature.next |= S3
-                        with temperature >= 4: # higher than 25
+                        with temperature >= 4: # higher than or equal to 25
                             state_temperature.next |= S2
                     with state_temperature == S4: #cool untill 22.5
                         with temperature > 3: # higher than 22.5
