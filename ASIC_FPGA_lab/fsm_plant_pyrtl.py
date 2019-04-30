@@ -12,7 +12,7 @@
 # * 60%: 6(0110); 70%: 7(0111); 80%: 13(1101); 90%: 14(1110); 100%: 15(1111)
 # 
 # **Temperature Sensor Output Legend (in Celsius):**
-# * <17.5: 0(000); 20: 1(001);22.5: 2(010); 25: 3(011); 27.5: 4(100); 30: 5(101); 32.5: 6(110); 35: 7(111); 
+# * <15: 0(000); 17.5: 1(001); 20: 2(010); 22.5: 3(011); 25: 4(100); 27.5: 5(101); 30: 6(110); 32.5: 7(111);
 # 
 # We have four inputs called **start**, **reset**, **water**, and **temperature**
 # 
@@ -98,80 +98,80 @@ with pyrtl.conditional_assignment:
                 with water <= 14: # less than or equal to %90
                     state_water.next |= S5
                     with state_temperature == S2: #ac OFF
-                        with temperature < 2: # less than 22,5
+                        with temperature < 2: # less than 20
                             state_temperature.next |= S3
-                        with temperature > 5: # higher than 30
+                        with temperature > 5: # higher than 27.5
                             state_temperature.next |= S4
-                        with pyrtl.otherwise: # between 22,5 and 30
+                        with pyrtl.otherwise: # between 20 and 27.5
                             state_temperature.next |= S2
-                    with state_temperature == S3: # heat
-                        with temperature <= 5: # less than or equal to 30
+                    with state_temperature == S3: # heat untill 25
+                        with temperature < 4: # less than or equal to 25
                             state_temperature.next |= S3
-                        with temperature > 5: # higher than 30
+                        with temperature >= 4: # higher than 25
                             state_temperature.next |= S2
-                    with state_temperature == S4: #cool
-                        with temperature <= 2: # less than or equal to 22.5
-                            state_temperature.next |= S2
-                        with temperature > 2: # higher than 22.5
+                    with state_temperature == S4: #cool untill 22.5
+                        with temperature > 3: # higher than 22.5
                             state_temperature.next |= S4
+                        with temperature <= 3: # less than or equal to 22.5
+                            state_temperature.next |= S2
                 with water > 14: # higher than %90
                     state_water.next |= S6
                     with state_temperature == S2: #ac OFF
-                        with temperature < 2: # less than 22,5
+                        with temperature < 2: # less than 20
                             state_temperature.next |= S3
-                        with temperature > 5: # higher than 30
+                        with temperature > 5: # higher than 27.5
                             state_temperature.next |= S4
-                        with pyrtl.otherwise: # between 22,5 and 30
+                        with pyrtl.otherwise: # between 20 and 27.5
                             state_temperature.next |= S2
-                    with state_temperature == S3: # heat
-                        with temperature <= 5: # less than or equal to 30
+                    with state_temperature == S3: # heat untill 25
+                        with temperature < 4: # less than or equal to 25
                             state_temperature.next |= S3
-                        with temperature > 5: # higher than 30
+                        with temperature >= 4: # higher than 25
                             state_temperature.next |= S2
-                    with state_temperature == S4: #cool
-                        with temperature <= 2: # less than or equal to 22.5
-                            state_temperature.next |= S2
-                        with temperature > 2: # higher than 22.5
+                    with state_temperature == S4: #cool untill 22.5
+                        with temperature > 3: # higher than 22.5
                             state_temperature.next |= S4
+                        with temperature <= 3: # less than or equal to 22.5
+                            state_temperature.next |= S2
             with state_water == S6: # pump OFF
                 with water <= 5: # less than or equal to %50
                     state_water.next |= S5
                     with state_temperature == S2: #ac OFF
-                        with temperature < 2: # less than 22,5
+                        with temperature < 2: # less than 20
                             state_temperature.next |= S3
-                        with temperature > 5: # higher than 30
+                        with temperature > 5: # higher than 27.5
                             state_temperature.next |= S4
-                        with pyrtl.otherwise: # between 22,5 and 30
+                        with pyrtl.otherwise: # between 20 and 27.5
                             state_temperature.next |= S2
-                    with state_temperature == S3: # heat
-                        with temperature <= 5: # less than or equal to 30
+                    with state_temperature == S3: # heat untill 25
+                        with temperature < 4: # less than or equal to 25
                             state_temperature.next |= S3
-                        with temperature > 5: # higher than 30
+                        with temperature >= 4: # higher than 25
                             state_temperature.next |= S2
-                    with state_temperature == S4: #cool
-                        with temperature <= 2: # less than or equal to 22.5
-                            state_temperature.next |= S2
-                        with temperature > 2: # higher than 22.5
+                    with state_temperature == S4: #cool untill 22.5
+                        with temperature > 3: # higher than 22.5
                             state_temperature.next |= S4
+                        with temperature <= 3: # less than or equal to 22.5
+                            state_temperature.next |= S2
                 with water > 5: # higher than %50
                     state_water.next |= S6
                     with state_temperature == S2: #ac OFF
-                        with temperature < 2: # less than 22,5
+                        with temperature < 2: # less than 20
                             state_temperature.next |= S3
-                        with temperature > 5: # higher than 30
+                        with temperature > 5: # higher than 27.5
                             state_temperature.next |= S4
-                        with pyrtl.otherwise: # between 22,5 and 30
+                        with pyrtl.otherwise: # between 20 and 27.5
                             state_temperature.next |= S2
-                    with state_temperature == S3: # heat
-                        with temperature <= 5: # less than or equal to 30
+                    with state_temperature == S3: # heat untill 25
+                        with temperature < 4: # less than or equal to 25
                             state_temperature.next |= S3
-                        with temperature > 5: # higher than 30
+                        with temperature >= 4: # higher than 25
                             state_temperature.next |= S2
-                    with state_temperature == S4: #cool
-                        with temperature <= 2: # less than or equal to 22.5
-                            state_temperature.next |= S2
-                        with temperature > 2: # higher than 22.5
+                    with state_temperature == S4: #cool untill 22.5
+                        with temperature > 3: # higher than 22.5
                             state_temperature.next |= S4
+                        with temperature <= 3: # less than or equal to 22.5
+                            state_temperature.next |= S2
             with pyrtl.otherwise:  
                 state_water.next |= S1
                 state_temperature.next |= S1
